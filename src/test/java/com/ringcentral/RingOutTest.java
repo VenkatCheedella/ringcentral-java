@@ -25,8 +25,7 @@ public class RingOutTest extends BaseTest {
             .from(new MakeRingOutCallerInfoRequestFrom().phoneNumber(config.get("username")))
             .to(new MakeRingOutCallerInfoRequestTo().phoneNumber(config.get("receiver")));
         ResponseBody response = restClient.post("/restapi/v1.0/account/~/extension/~/ring-out", requestBody);
-        String responseJson = response.string();
-        JsonElement jElement = new JsonParser().parse(responseJson);
+        JsonElement jElement = new JsonParser().parse(response.string());
         JsonObject jObj = jElement.getAsJsonObject();
         String callId = jObj.get("id").getAsString();
         Assert.assertTrue("CallID is not retreived, call may not be successful", !callId.equals(""));
@@ -35,8 +34,7 @@ public class RingOutTest extends BaseTest {
         HttpClient.QueryParameter params = new HttpClient.QueryParameter("content-type", "application/json");
         String endpoint = "/restapi/v1.0/account/~/extension/~/call-log";
         response = restClient.get(endpoint, params);
-        String strResponse = response.string();
-        JsonElement callLogsJson = new JsonParser().parse(strResponse);
+        JsonElement callLogsJson = new JsonParser().parse(response.string());
         JsonObject callLogsJObj = callLogsJson.getAsJsonObject();
         JsonArray records = callLogsJObj.getAsJsonArray("records");
         JsonObject latestRecord = records.get(0).getAsJsonObject();
