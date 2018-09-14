@@ -54,7 +54,7 @@ public class BaseTest {
         String content = new String(Files.readAllBytes(Paths.get("./src/test/resources/.env.sample")));
         for (String line : content.split("\n")) {
             String[] tokens = line.split("=");
-            String value = System.getenv(tokens[0]);
+            String value = tokens[1];
             config.put(tokens[0], value == null ? "" : value);
         }
     }
