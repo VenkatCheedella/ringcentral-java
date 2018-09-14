@@ -19,7 +19,7 @@ import com.ringcentral.definitions.MakeRingOutRequest;
 public class RingOutTest extends BaseTest {
 
     @Test
-    public void testRingOut() throws IOException, RestException {
+    public void testRingOutAndCallLog() throws IOException, RestException {
 
         MakeRingOutRequest requestBody = new MakeRingOutRequest()
             .from(new MakeRingOutCallerInfoRequestFrom().phoneNumber(config.get("username")))
