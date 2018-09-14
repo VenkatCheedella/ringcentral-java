@@ -21,26 +21,26 @@ public class RingOutTest extends BaseTest {
     @Test
     public void testRingOutAndCallLog() throws IOException, RestException {
 
-        MakeRingOutRequest requestBody = new MakeRingOutRequest()
+        MakeRingOutRequest callRequestBody = new MakeRingOutRequest()
             .from(new MakeRingOutCallerInfoRequestFrom().phoneNumber(config.get("username")))
             .to(new MakeRingOutCallerInfoRequestTo().phoneNumber(config.get("receiver")));
-        ResponseBody response = restClient.post("/restapi/v1.0/account/~/extension/~/ring-out", requestBody);
-        JsonElement jElement = new JsonParser().parse(response.string());
-        JsonObject jObj = jElement.getAsJsonObject();
-        String callId = jObj.get("id").getAsString();
+        ResponseBody callReqAck = restClient.post("/restapi/v1.0/account/~/extension/~/ring-out", callRequestBody);
+        JsonElement jsonCallReqAck = new JsonParser().parse(callReqAck.string());
+        JsonObject jObjCallReqAck = jsonCallReqAck.getAsJsonObject();
+        String callId = jObjCallReqAck.get("id").getAsString();
         Assert.assertTrue("CallID is not retreived, call may not be successful", !callId.equals(""));
 
         //get call log information
         HttpClient.QueryParameter params = new HttpClient.QueryParameter("content-type", "application/json");
         String endpoint = "/restapi/v1.0/account/~/extension/~/call-log";
-        response = restClient.get(endpoint, params);
-        JsonElement callLogsJson = new JsonParser().parse(response.string());
-        JsonObject callLogsJObj = callLogsJson.getAsJsonObject();
-        JsonArray records = callLogsJObj.getAsJsonArray("records");
-        JsonObject latestRecord = records.get(0).getAsJsonObject();
-        String latestCallLogUrl = latestRecord.get("uri").getAsString();
-        response = restClient.get(latestCallLogUrl, params);
-        System.out.println(response.string());
+        ResponseBody callsLog = restClient.get(endpoint, params);
+        JsonElement callsLogJson = new JsonParser().parse(callsLog.string());
+        JsonObject callLogsJObj = callsLogJson.getAsJsonObject();
+        JsonArray callRecords = callLogsJObj.getAsJsonArray("records");
+        JsonObject recentCallRecord = callRecords.get(0).getAsJsonObject();
+        String latestCallLogUrl = recentCallRecord.get("uri").getAsString();
+        ResponseBody callLog = restClient.get(latestCallLogUrl, params);
+        System.out.println(callLog.string());
     }
 
 }
